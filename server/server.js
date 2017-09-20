@@ -16,10 +16,16 @@ io.on('connection', (socket) => {
 
     socket.on('createMessage', (message) => {
         console.log('createMessage', message)
-        // Emit and event to every single event
-        io.emit('newMessage', {
-            from: message.from,
-            text: message.text,
+        // Sending message to the user emitted the message
+        socket.emit('newMessage', {
+            from: 'Admin',
+            text: 'Welcome to the chat app',
+            createAt: new Date().getTime()
+        })
+        // Sending messages to everyone in the chat to know that user emitted the message
+        socket.broadcast.emit('newMessage', {
+            from: 'Admin',
+            text: `New User Joined: ${message.from}`,
             createAt: new Date().getTime()
         })
     })
