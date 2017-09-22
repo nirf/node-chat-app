@@ -15,7 +15,7 @@ app.use(express.static(publicPath))
 io.on('connection', (socket) => {
     console.log('New user connected')
 
-    socket.on('createMessage', (message) => {
+    socket.on('createMessage', (message, callback) => {
         console.log('createMessage', message)
         // Sending message to the user emitted the message
         socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'))
@@ -23,6 +23,8 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('newMessage', generateMessage('Admin', `New User Joined: ${message.from}`))
         // Sending message to everyone in the group
         io.emit('newMessage', generateMessage(message.from, message.text))
+        // Send acknowledgement to the client
+        callback('This is from the server.')
     })
 
     socket.on('disconnect', () => {
