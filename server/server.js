@@ -24,7 +24,7 @@ io.on('connection', (socket) => {
         // Sending message to everyone in the group
         io.emit('newMessage', generateMessage(message.from, message.text))
         // Send acknowledgement to the client
-        callback('This is from the server.')
+        callback()
     })
 
     socket.on('createLocationMessage', (message) => {
