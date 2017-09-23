@@ -36,15 +36,21 @@ io.on('connection', (socket) => {
     })
 
     socket.on('createMessage', (message, callback) => {
-        // Sending message to everyone in the group
-        io.emit('newMessage', generateMessage(message.from, message.text))
-        // Send acknowledgement to the client
+        let user = users.getUser(socket.id)
+
+        if (user && isRealString(message.text)) {
+            io.to(user.room).emit('newMessage', generateMessage(user.name, message.text))
+        }
+
         callback()
     })
 
     socket.on('createLocationMessage', (message) => {
-        // Sending the location to
-        io.emit('newLocationMessage', generateLocationMessage('Admin', message.latitude, message.longitude))
+        let user = users.getUser(socket.id)
+
+        if (user) {
+            io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, message.latitude, message.longitude))
+        }
     })
 
     socket.on('disconnect', () => {
